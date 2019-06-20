@@ -28,7 +28,7 @@
 
     <actions>
         <!-- Add your actions here -->
-        <action id="com.adeveloperh.plugin" class="CheckLanStrAction" text="CheckLanStr" description="检测多余翻译插件">
+        <action id="com.adeveloperh.plugin" class="com.adeveloperh.plugin.CheckLanStrAction" text="CheckLanStr" description="检测多余翻译插件">
             <add-to-group group-id="EditMenu" anchor="first"/>
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift C"/>
         </action>

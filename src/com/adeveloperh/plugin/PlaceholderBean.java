@@ -1,3 +1,5 @@
+package com.adeveloperh.plugin;
+
 public class PlaceholderBean {
 
     //%s 个数
