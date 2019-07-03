@@ -7,7 +7,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -102,9 +105,9 @@ public class CheckAndroidStrings {
 //    }
 
 
-    public static String startCheck() {
+    public static String startCheck(String basePath) {
         sbResult = new StringBuilder();
-        readConfig();
+        readConfig(basePath);
         //先解析作为对比的语言文件
         compareLanMap = parseXml(PATH_START + COMPARE_LAN + PATH_END, COMPARE_LAN, true);
 
@@ -117,8 +120,10 @@ public class CheckAndroidStrings {
     }
 
 
-    private static String readConfig() {
-        String jsonStr = "{\"stringsFloderPath\":\"D:\\\\Repositories\\\\NoxSecurity\\\\app\\\\src\\\\main\\\\res\\\\\", \t\"compareLanFolder\": \"values\", \t\"placeHolderWhiteList\": [\"battery_running_title1\", \"permission_desc_accessibility\", \"permission_desc_selfstart\", \"deep_clean_des_dialog\", \"game_permission_desc_accessibility\", \"msg_memory_tip\", \"msg_battery_tip\"], \t\"surplusWhiteList\": [], \t\"lackWhiteList\": [\"app_name\", \"whatsapp\", \"line\", \"wechat\", \"qq\", \"private_noti_msg_count\", \"like_us_on_facebook\", \"default_notification_channel_id\"], \t\"stringsFolderMap\": { \t\t\"values\": \"英语\", \t\t\"values-ar\": \"阿拉伯语\", \t\t\"values-cs-rCZ\": \"捷克\", \t\t\"values-de-rDE\": \"德语\", \t\t\"values-es-rES\": \"西班牙语\", \t\t\"values-fr-rFR\": \"法语\", \t\t\"values-in-rID\": \"印尼语\", \t\t\"values-ja-rJP\": \"日语\", \t\t\"values-ko-rKR\": \"韩语\", \t\t\"values-pl-rPL\": \"波兰\", \t\t\"values-pt-rPT\": \"葡萄牙语\", \t\t\"values-ru-rRU\": \"俄语\", \t\t\"values-sv\": \"瑞典\", \t\t\"values-th-rTH\": \"泰语\", \t\t\"values-vi-rVN\": \"越南语\", \t\t\"values-zh-rCN\": \"中文\", \t\t\"values-zh-rTW\": \"繁体中文\" \t} }";
+    private static String readConfig(String basePath) {
+        File cacheFile = new File(basePath + "/checkstrings.config");
+        System.out.println("cacheFile:" + cacheFile.getAbsolutePath());
+        String jsonStr = readStringFromFile(cacheFile);
         if (!isEmpty(jsonStr)) {
             ConfigBean configBean = new Gson().fromJson(jsonStr, ConfigBean.class);
             if (configBean != null) {
@@ -129,7 +134,7 @@ public class CheckAndroidStrings {
                 List<String> surplusWhiteList = configBean.getSurplusWhiteList();
                 LinkedHashMap<String, String> stringsFolderMap = configBean.getStringsFolderMap();
                 if (!isEmpty(stringsFloderPath)) {
-                    PATH_START = stringsFloderPath;
+                    PATH_START = basePath + stringsFloderPath;
                 }
                 if (!isEmpty(compareLanFolder)) {
                     COMPARE_LAN = compareLanFolder;
@@ -150,6 +155,18 @@ public class CheckAndroidStrings {
             }
         }
         return jsonStr;
+    }
+
+    public static String readStringFromFile(File cacheFile) {
+        StringBuilder builder = new StringBuilder();
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(cacheFile), "UTF-8"));
+            for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+                builder.append(line).append("\n");
+            }
+        } catch (Exception var4) {
+        }
+        return builder.toString();
     }
 
 
