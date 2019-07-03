@@ -58,9 +58,7 @@ public class CheckAndroidStrings {
     public static String COMPARE_LAN = "values";
 
     public static String PATH_START = "D:\\Repositories\\NoxSecurity\\app\\src\\main\\res\\";
-    public static final String PATH_END = "\\strings.xml";
-    public static final String PATH_END2 = "\\string.xml";
-
+    public static final String PATH_END = File.separator + "strings.xml";
 
     public static final String PATH_CONFIG = "checkstrings.config";
 
