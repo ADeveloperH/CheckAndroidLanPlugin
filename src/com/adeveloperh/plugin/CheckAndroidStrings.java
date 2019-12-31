@@ -55,14 +55,14 @@ public class CheckAndroidStrings {
     private static LinkedHashMap<String, PlaceholderBean> comparePlaceHolderCountMap = new LinkedHashMap<>();
 
     //作为对比的语言所在的目录
-    public static String COMPARE_LAN = "values";
+    private static String COMPARE_LAN = "values";
 
-    public static String PATH_START = "D:\\Repositories\\NoxSecurity\\app\\src\\main\\res\\";
-    public static final String PATH_END = File.separator + "strings.xml";
+    private static String PATH_START = "D:\\Repositories\\NoxSecurity\\app\\src\\main\\res\\";
+    private static final String PATH_END = File.separator + "strings.xml";
 
     public static final String PATH_CONFIG = "checkstrings.config";
 
-    public static StringBuilder sbResult = new StringBuilder();
+    private static StringBuilder sbResult = new StringBuilder();
 
 //    static {
 //        stringsFolderMap.put("values", "英语");
@@ -155,7 +155,7 @@ public class CheckAndroidStrings {
         return jsonStr;
     }
 
-    public static String readStringFromFile(File cacheFile) {
+    private static String readStringFromFile(File cacheFile) {
         StringBuilder builder = new StringBuilder();
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(cacheFile), "UTF-8"));
@@ -168,15 +168,15 @@ public class CheckAndroidStrings {
     }
 
 
-    public static LinkedHashMap parseXml(String filePath, String lan, boolean isCompareLan) {
+    private static LinkedHashMap parseXml(String filePath, String lan, boolean isCompareLan) {
         try {
             if (filePath != null && !filePath.isEmpty() && new File(filePath).exists()) {
                 sbResult.append("\n");
                 sbResult.append("=====================================================================").append("\n").append("\n");
-                sbResult.append("当前的语言是：" + lan + ":" + stringsFolderMap.get(lan)).append("\n");
+                sbResult.append("当前的语言是：").append(lan).append(":").append(stringsFolderMap.get(lan)).append("\n");
                 Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File(filePath));
                 NodeList childNodes = document.getElementsByTagName("string");
-                sbResult.append("总个数:" + childNodes.getLength()).append("\n");
+                sbResult.append("总个数:").append(childNodes.getLength()).append("\n");
                 LinkedHashMap<String, String> curLanHashMap = new LinkedHashMap<>();
                 List<String> invalideKey = new ArrayList<>();
                 int noTranslateCount = 0;
@@ -201,24 +201,24 @@ public class CheckAndroidStrings {
                 }
 
                 if (noTranslateCount > 0) {
-                    sbResult.append("translatable 为 false 个数：" + noTranslateCount).append("\n");
+                    sbResult.append("translatable 为 false 个数：").append(noTranslateCount).append("\n");
                 }
 
                 if (!COMPARE_LAN.equals(lan)) {
                     for (String key : compareLanMap.keySet()) {
                         if (!curLanHashMap.containsKey(key) && !lackWhiteList.contains(key)) {
-                            sbResult.append("缺少key:==============================" + key).append("\n");
+                            sbResult.append("缺少key:==============================").append(key).append("\n");
                         }
                     }
 
                     for (String key : curLanHashMap.keySet()) {
                         if (!compareLanMap.containsKey(key) && !surplusWhiteList.contains(key)) {
-                            sbResult.append("多余的key:==============================" + key).append("\n");
+                            sbResult.append("多余的key:==============================").append(key).append("\n");
                         }
                     }
 
                     for (String key : invalideKey) {
-                        sbResult.append("占位符有问题的key：==============================" + key).append("\n");
+                        sbResult.append("占位符有问题的key：==============================").append(key).append("\n");
                     }
                 }
 
@@ -226,33 +226,32 @@ public class CheckAndroidStrings {
             } else {
                 sbResult.append("\n")
                         .append("***********************************************************************************************************")
-                        .append("\n")
-                        .append("未找到对应文件:" + filePath + "  语言为：" + lan)
+                        .append("\n").append("未找到对应文件:").append(filePath).append("  语言为：").append(lan)
                         .append("\n")
                         .append("***********************************************************************************************************")
                         .append("\n");
             }
         } catch (Exception e) {
-            sbResult.append("e:" + e.getLocalizedMessage()).append("\n");
+            sbResult.append("e:").append(e.getLocalizedMessage()).append("\n");
         }
         return null;
     }
 
-    public static boolean isValide(String key, String value, boolean isCompareLan) {
+    private static boolean isValide(String key, String value, boolean isCompareLan) {
         PlaceholderBean curBean = new PlaceholderBean();
         if (!isEmpty(value)) {
             if (value.contains("%")) {
                 curBean.count_type1 = getCountStr(value, "%s");
 
                 int countS2 = 0;
-                for (int i = 0; i < 10; i++) {
+                for (int i = 1; i < 10; i++) {
                     countS2 += getCountStr(value, "%" + i + "s");
                 }
                 curBean.count_type3 = countS2;
 
                 int countS3 = 0;
-                for (int i = 0; i < 10; i++) {
-                    countS3 += countStr(value, "%" + i + "$s");
+                for (int i = 1; i < 10; i++) {
+                    countS3 += getCountStr(value, "%" + i + "$s");
                 }
                 curBean.count_type4 = countS3;
 
@@ -260,15 +259,15 @@ public class CheckAndroidStrings {
                 curBean.count_type2 = getCountStr(value, "%d");
 
                 int countD2 = 0;
-                for (int i = 0; i < 10; i++) {
+                for (int i = 1; i < 10; i++) {
                     countD2 += getCountStr(value, "%" + i + "d");
                 }
                 curBean.count_type5 = countD2;
 
 
                 int countD3 = 0;
-                for (int i = 0; i < 10; i++) {
-                    countD3 += countStr(value, "%" + i + "$d");
+                for (int i = 1; i < 10; i++) {
+                    countD3 += getCountStr(value, "%" + i + "$d");
                 }
                 curBean.count_type6 = countD3;
 
@@ -283,11 +282,11 @@ public class CheckAndroidStrings {
         }
     }
 
-    public static boolean isEmpty(String string) {
+    private static boolean isEmpty(String string) {
         return string == null || string.isEmpty();
     }
 
-    public static boolean isEmpty(List list) {
+    private static boolean isEmpty(List list) {
         return list == null || list.isEmpty();
     }
 
@@ -297,12 +296,12 @@ public class CheckAndroidStrings {
         return countStr(str1, str2);
     }
 
-    static int counter = 0;
+    private static int counter = 0;
 
     private static int countStr(String str1, String str2) {
-        if (str1.indexOf(str2) == -1) {
+        if (!str1.contains(str2)) {
             return 0;
-        } else if (str1.indexOf(str2) != -1) {
+        } else if (str1.contains(str2)) {
             counter++;
             countStr(str1.substring(str1.indexOf(str2) + str2.length()), str2);
             return counter;
