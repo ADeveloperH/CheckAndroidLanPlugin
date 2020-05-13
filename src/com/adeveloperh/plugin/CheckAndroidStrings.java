@@ -7,10 +7,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -114,7 +111,9 @@ public class CheckAndroidStrings {
                 parseXml(PATH_START + key + PATH_END, key, false);
             }
         }
-        return sbResult.toString();
+        String result = sbResult.toString();
+        saveResult(result, basePath, "checkLanResult.txt");
+        return result;
     }
 
 
@@ -167,6 +166,32 @@ public class CheckAndroidStrings {
         return builder.toString();
     }
 
+
+    /**
+     * 将结果保存至文件中
+     *
+     * @param str
+     * @param basePath
+     * @param fileName
+     */
+    public static void saveResult(String str, String basePath, String fileName) {
+        // 创建String对象保存文件名路径
+        try {
+            // 创建指定路径的文件
+            File file = new File(basePath, fileName);
+            // 如果文件不存在
+            if (file.exists()) {
+                // 创建新的空文件
+                file.delete();
+            }
+            file.createNewFile();
+            OutputStreamWriter oStreamWriter = new OutputStreamWriter(new FileOutputStream(file), "utf-8");
+            oStreamWriter.append(str);
+            oStreamWriter.close();
+        } catch (Exception e) {
+        }
+
+    }
 
     private static LinkedHashMap parseXml(String filePath, String lan, boolean isCompareLan) {
         try {
