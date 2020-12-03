@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.adeveloperh.plugin</id>
     <name>CheckLanStrTool</name>
-    <version>1.0</version>
+    <version>1.1</version>
     <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
 
     <description><![CDATA[
@@ -21,11 +21,11 @@
     <!-- uncomment to enable plugin in all products
     <depends>com.intellij.modules.lang</depends>
     -->
-
+    <depends>com.intellij.modules.java</depends>
+    <depends>com.intellij.modules.platform</depends>
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
     </extensions>
-
     <actions>
         <!-- Add your actions here -->
         <action id="com.adeveloperh.plugin" class="com.adeveloperh.plugin.CheckLanStrAction" text="CheckLanStr" description="检测多余翻译插件">
